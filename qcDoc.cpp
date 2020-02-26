@@ -76,7 +76,7 @@ static bool getMultiPlusSingle(CStringArray& formulas)
 	for (int i = 0; i < cols * rows; i++)
 	{
 		CString formula;
-		formula.Format(L"%d x %d =      ", (rand() % 90) + 10, rand() % 10);
+		formula.Format(L"%d x %d =      ", (rand() % 90) + 10, (rand() % 8) + 2);
 		formulas.Add(formula);
 	}
 
