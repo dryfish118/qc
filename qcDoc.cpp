@@ -71,12 +71,61 @@ static bool getSinglePlusSingle(CStringArray& formulas)
 	return true;
 }
 
-static bool getMultiPlusSingle(CStringArray& formulas)
+static bool getMultiPlusSingle(CStringArray& formulas, bool bigFirst)
 {
+	std::set<int> f;
+	f.insert(0);
 	for (int i = 0; i < cols * rows; i++)
 	{
+		int x = 0, y = 0, c = 0;
+		while (f.find(c) != f.end())
+		{
+			x = (rand() % 90) + 10;
+			y = (rand() % 8) + 2;
+			c = (x << 4) | y;
+		}
+		f.insert(c);
+
 		CString formula;
-		formula.Format(L"%d x %d =      ", (rand() % 90) + 10, (rand() % 8) + 2);
+		if (bigFirst)
+		{
+			formula.Format(L"%dx%d=          ", x, y);
+		}
+		else
+		{
+			formula.Format(L"%dx%d=          ", y, x);
+		}
+		formulas.Add(formula);
+	}
+
+	return true;
+}
+
+static bool getMultiDevideSingle(CStringArray& formulas)
+{
+	std::set<int> f;
+	f.insert(0);
+	for (int i = 0; i < cols * rows; i++)
+	{
+		int x = 0, y = 0, c = 0;
+		while (f.find(c) != f.end())
+		{
+			x = (rand() % 90) + 10;
+			y = (rand() % 8) + 2;
+			c = (x << 4) | y;
+		}
+		f.insert(c);
+
+		x *= y;
+		CString formula;
+		if (x >= 100)
+		{
+			formula.Format(L"%d÷%d=       ", x, y);
+		}
+		else
+		{
+			formula.Format(L"  %d÷%d=       ", x, y);
+		}
 		formulas.Add(formula);
 	}
 
@@ -97,11 +146,13 @@ BOOL CqcDoc::OnNewDocument()
 		getSinglePlusSingle(m_formula);
 		break;
 	case eMultiPlusSingle:
-		getMultiPlusSingle(m_formula);
+		getMultiPlusSingle(m_formula, true);
 		break;
 	case eSinglePlusMulti:
+		getMultiPlusSingle(m_formula, false);
 		break;
 	case eMultiDivideSingle:
+		getMultiDevideSingle(m_formula);
 		break;
 	default:
 		break;
